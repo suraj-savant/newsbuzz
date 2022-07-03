@@ -4,6 +4,19 @@
    <!-- Required to fetch data from the internet. -->
    <uses-permission android:name="android.permission.INTERNET" />
 
+   <!-- Required for launch the urls-->
+   <queries>
+     <!-- If your app checks for SMS support -->
+     <intent>
+       <action android:name="android.intent.action.VIEW" />
+       <data android:scheme="sms" />
+     </intent>
+     <!-- If your app checks for call support -->
+     <intent>
+       <action android:name="android.intent.action.VIEW" />
+       <data android:scheme="tel" />
+     </intent>
+   </queries>
    <application
         android:label="newsbuzz"
         android:name="${applicationName}"

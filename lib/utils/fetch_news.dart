@@ -7,7 +7,7 @@ import 'package:newsbuzz/utils/api_key.dart';
 
 Future<List<Article>> fetchArticle() async {
   var url =
-      'https://newsapi.org/v2/everything?q=apple&from=2022-06-25&to=2022-06-25&sortBy=popularity&apiKey=$apiKey';
+      'https://newsapi.org/v2/top-headlines?country=in&category&apiKey=$apiKey';
   var res = await http.get(Uri.parse(url));
   if (!(res.statusCode == 200)) throw Exception("Unable to load json");
 

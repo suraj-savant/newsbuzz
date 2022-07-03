@@ -30,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
           future: articles,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Text("Error in snapshot ${snapshot.error}");
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Opps ! No internet connection')));
             } else if (snapshot.hasData) {
               return NewsBuilder(
                 articles: snapshot.data!,
