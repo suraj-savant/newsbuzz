@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:newsbuzz/models/article.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NewsBuilder extends StatelessWidget {
-  const NewsBuilder({Key? key, required this.articles}) : super(key: key);
+class ArticleBuilder extends StatelessWidget {
+  const ArticleBuilder({Key? key, required this.articles}) : super(key: key);
   final List<Article> articles;
 
   @override
@@ -12,14 +12,14 @@ class NewsBuilder extends StatelessWidget {
       itemCount: articles.length,
       itemBuilder: ((context, index) {
         Article article = articles[index];
-        return NewsCardWidget(article);
+        return ArticleCardWidget(article);
       }),
     );
   }
 }
 
-class NewsCardWidget extends StatelessWidget {
-  const NewsCardWidget(this.article, {Key? key}) : super(key: key);
+class ArticleCardWidget extends StatelessWidget {
+  const ArticleCardWidget(this.article, {Key? key}) : super(key: key);
   final Article article;
 
   @override
@@ -45,15 +45,15 @@ class NewsCardWidget extends StatelessWidget {
         children: [
           NetworkImageProvider(article.urlToImage ?? 'null'),
           const SizedBox(height: 15),
-          NewsCardHeader(article: article)
+          ArticleCardHeader(article: article)
         ],
       ),
     );
   }
 }
 
-class NewsCardHeader extends StatefulWidget {
-  const NewsCardHeader({
+class ArticleCardHeader extends StatefulWidget {
+  const ArticleCardHeader({
     Key? key,
     required this.article,
   }) : super(key: key);
@@ -61,10 +61,10 @@ class NewsCardHeader extends StatefulWidget {
   final Article article;
 
   @override
-  State<NewsCardHeader> createState() => _NewsCardHeaderState();
+  State<ArticleCardHeader> createState() => _ArticleCardHeaderState();
 }
 
-class _NewsCardHeaderState extends State<NewsCardHeader> {
+class _ArticleCardHeaderState extends State<ArticleCardHeader> {
   int? maxTitleLines = 2;
 
   void changeMaxTitleLines(bool isExpansionIconChanged) {
