@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
       "sports",
       "technology"
     ];
+
     return SafeArea(
         child: DefaultTabController(
       length: 6,
@@ -30,17 +31,16 @@ class _HomeScreenState extends State<HomeScreen> {
           bottom: TabBar(
             padding: const EdgeInsets.all(16),
             isScrollable: true,
-            tabs: List.generate(
-              categories.length,
-              (index) => Text(
-                categories[index].toUpperCase(),
-              ),
-            ),
+            tabs: categories
+                .map((category) => Text(category.toUpperCase()))
+                .toList(),
           ),
         ),
         body: TabBarView(
-            children: List.generate(categories.length,
-                (index) => NewsBuilder(category: categories[index]))),
+          children: categories
+              .map((category) => NewsBuilder(category: category))
+              .toList(),
+        ),
       ),
     ));
   }
