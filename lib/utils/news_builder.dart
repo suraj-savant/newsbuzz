@@ -9,6 +9,7 @@ class ArticleBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      key: UniqueKey(),
       itemCount: articles.length,
       itemBuilder: ((context, index) {
         Article article = articles[index];
@@ -79,7 +80,6 @@ class _ArticleCardHeaderState extends State<ArticleCardHeader> {
     final Article article = widget.article;
     return ExpansionTile(
       textColor: Colors.black,
-      maintainState: true,
       onExpansionChanged: (isExpansionIconChanged) =>
           changeMaxTitleLines(isExpansionIconChanged),
       title: Column(
@@ -153,6 +153,11 @@ class NetworkImageProvider extends StatelessWidget {
               height: 200,
               width: double.maxFinite,
               fit: BoxFit.cover,
+              errorBuilder: (BuildContext context, Object object,
+                      StackTrace? stackTrace) =>
+                  const SizedBox(
+                height: 1,
+              ),
             )
           : const SizedBox(
               height: 1,

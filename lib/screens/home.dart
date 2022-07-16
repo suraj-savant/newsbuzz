@@ -9,54 +9,64 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: DefaultTabController(
+    return DefaultTabController(
       length: categories.length,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("NewsBuzz"),
-          bottom: TabBar(
-            padding: const EdgeInsets.all(16),
-            isScrollable: true,
-            tabs: categories
-                .map((category) => Text(category.toUpperCase()))
-                .toList(),
+      child: Builder(builder: (context) {
+        final int? currentTabIndex = DefaultTabController.of(context)?.index;
+        return SafeArea(
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text("NewsBuzz"),
+              bottom: TabBar(
+                padding: const EdgeInsets.all(16),
+                isScrollable: true,
+                tabs: categories
+                    .map((category) => Text(category.toUpperCase()))
+                    .toList(),
+              ),
+            ),
+            body: TabBarView(
+              children: context
+                  .watch<ArticleProvider>()
+                  .categoryArticleList
+                  .map((articlelist) => NewsBuilder(
+                        articleList: articlelist,
+                        currentTabIndex: currentTabIndex,
+                      ))
+                  .toList(),
+            ),
           ),
-        ),
-        body: TabBarView(
-          children: context
-              .watch<ArticleProvider>()
-              .categoryArticleList
-              .map((articlelist) => NewsBuilder(articleList: articlelist))
-              .toList(),
-        ),
-      ),
-    ));
+        );
+      }),
+    );
   }
 }
 
 class NewsBuilder extends StatelessWidget {
-  const NewsBuilder({Key? key, required this.articleList}) : super(key: key);
+  const NewsBuilder(
+      {Key? key, required this.articleList, required this.currentTabIndex})
+      : super(key: key);
   final Future<List<Article>> articleList;
+  final int? currentTabIndex;
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: RefreshIndicator(
-        onRefresh: () async => Future.delayed(Duration(seconds: 4), () => 1),
-        child: FutureBuilder<List<Article>>(
-          future: articleList,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text("Opps Please check your Internet connection");
-            } else if (snapshot.hasData) {
-              return ArticleBuilder(
-                articles: snapshot.data!,
-              );
-            }
-            return const CircularProgressIndicator();
-          },
-        ),
+        child: RefreshIndicator(
+      onRefresh: () =>
+          context.read<ArticleProvider>().refreshArticleList(currentTabIndex),
+      child: FutureBuilder<List<Article>>(
+        future: articleList,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text("Opps Please check your Internet connection");
+          } else if (snapshot.hasData) {
+            return ArticleBuilder(
+              articles: snapshot.data!,
+            );
+          }
+          return const CircularProgressIndicator();
+        },
       ),
-    );
+    ));
   }
 }

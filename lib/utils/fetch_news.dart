@@ -20,5 +20,8 @@ Future<List<Article>> fetchArticle(String category) async {
 List<Article> parseArticle(String responseBody) {
   final jsonData = jsonDecode(responseBody);
   List<dynamic> articleJsonList = jsonData['articles'];
-  return articleJsonList.map((value) => Article.fromJson(value)).toList();
+  List<Article> temp =
+      articleJsonList.map((value) => Article.fromJson(value)).toList();
+  temp.shuffle();
+  return temp;
 }
