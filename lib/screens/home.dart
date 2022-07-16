@@ -1,30 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:newsbuzz/models/article.dart';
-import 'package:newsbuzz/utils/fetch_news.dart';
+import 'package:newsbuzz/provider/article_provider.dart';
 import 'package:newsbuzz/utils/news_builder.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
   Widget build(BuildContext context) {
-    List<String> categories = [
-      "general",
-      "entertainment",
-      "health",
-      "science",
-      "sports",
-      "technology"
-    ];
-
     return SafeArea(
         child: DefaultTabController(
-      length: 6,
+      length: categories.length,
       child: Scaffold(
         appBar: AppBar(
           title: const Text("NewsBuzz"),
@@ -37,8 +24,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         body: TabBarView(
-          children: categories
-              .map((category) => NewsBuilder(category: category))
+          children: context
+              .watch<ArticleProvider>()
+              .categoryArticleList
+              .map((articlelist) => NewsBuilder(articleList: articlelist))
               .toList(),
         ),
       ),
@@ -47,23 +36,26 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class NewsBuilder extends StatelessWidget {
-  NewsBuilder({Key? key, required this.category}) : super(key: key);
-  String category;
+  const NewsBuilder({Key? key, required this.articleList}) : super(key: key);
+  final Future<List<Article>> articleList;
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: FutureBuilder<List<Article>>(
-        future: fetchArticle(category),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Text("Opps Please check your Internet connection");
-          } else if (snapshot.hasData) {
-            return ArticleBuilder(
-              articles: snapshot.data!,
-            );
-          }
-          return const CircularProgressIndicator();
-        },
+      child: RefreshIndicator(
+        onRefresh: () async => Future.delayed(Duration(seconds: 4), () => 1),
+        child: FutureBuilder<List<Article>>(
+          future: articleList,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Text("Opps Please check your Internet connection");
+            } else if (snapshot.hasData) {
+              return ArticleBuilder(
+                articles: snapshot.data!,
+              );
+            }
+            return const CircularProgressIndicator();
+          },
+        ),
       ),
     );
   }
