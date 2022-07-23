@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newsbuzz/models/article.dart';
 import 'package:newsbuzz/provider/article_provider.dart';
+import 'package:newsbuzz/provider/toogle_search_bar.dart';
 import 'package:newsbuzz/utils/news_builder.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,29 @@ class HomeScreen extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(
               title: const Text("NewsBuzz"),
+              actions: [
+                AnimatedContainer(
+                  width:
+                      context.watch<ToogleSearch>().isSearchBarActive ? 200 : 0,
+                  duration: const Duration(seconds: 1),
+                  child: TextField(
+                    onSubmitted: (value) => print(value),
+                    decoration: const InputDecoration(
+                      hintText: "Seach Anything ...",
+                      iconColor: Colors.white,
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: context.read<ToogleSearch>().toogleSeachBar,
+                  icon: const Icon(Icons.search),
+                ),
+              ],
               bottom: TabBar(
                 padding: const EdgeInsets.all(16),
                 isScrollable: true,
