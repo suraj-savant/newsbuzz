@@ -24,10 +24,15 @@ class HomeScreen extends StatelessWidget {
                       context.watch<ToogleSearch>().isSearchBarActive ? 200 : 0,
                   duration: const Duration(seconds: 1),
                   child: TextField(
-                    onSubmitted: (value) => print(value),
+                    onSubmitted: (query) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Fetching Results for $query')),
+                      );
+                      context.read<ArticleProvider>().queryArticles(query);
+                      context.read<ToogleSearch>().toogleSeachBar();
+                    },
                     decoration: const InputDecoration(
                       hintText: "Seach Anything ...",
-                      iconColor: Colors.white,
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(

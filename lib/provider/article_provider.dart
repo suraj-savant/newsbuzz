@@ -14,12 +14,19 @@ const List<String> categories = [
 
 class ArticleProvider with ChangeNotifier {
   List<Future<List<Article>>> categoryArticleList =
-      categories.map((category) => fetchArticle(category)).toList();
+      categories.map((category) => fetchArticleByCategory(category)).toList();
 
   Future<void> refreshArticleList(int? tabIndex) async {
     List<Article> temp = await categoryArticleList[tabIndex!];
     temp.shuffle();
     categoryArticleList[tabIndex] = Future.value(temp);
+    notifyListeners();
+  }
+
+  Future<void> queryArticles(String query) async {
+    List<Article> temp = await categoryArticleList[0];
+    temp.insertAll(0, await fetchArticleByQuery(query));
+    categoryArticleList[0] = Future.value(temp);
     notifyListeners();
   }
 }
