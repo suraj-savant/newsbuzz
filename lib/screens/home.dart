@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:newsbuzz/models/article.dart';
-import 'package:newsbuzz/provider/article_provider.dart';
+import 'package:newsbuzz/provider/article.dart';
 import 'package:newsbuzz/provider/toogle_search_bar.dart';
 import 'package:newsbuzz/utils/news_builder.dart';
 import 'package:provider/provider.dart';
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -19,28 +21,7 @@ class HomeScreen extends StatelessWidget {
             appBar: AppBar(
               title: const Text("NewsBuzz"),
               actions: [
-                AnimatedContainer(
-                  width:
-                      context.watch<ToogleSearch>().isSearchBarActive ? 200 : 0,
-                  duration: const Duration(seconds: 1),
-                  child: TextField(
-                    onSubmitted: (query) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Fetching Results for $query')),
-                      );
-                      context.read<ArticleProvider>().queryArticles(query);
-                      context.read<ToogleSearch>().toogleSeachBar();
-                    },
-                    decoration: const InputDecoration(
-                      hintText: "Seach Anything ...",
-                      fillColor: Colors.white,
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
+                const SearchBar(),
                 IconButton(
                   onPressed: context.read<ToogleSearch>().toogleSeachBar,
                   icon: const Icon(Icons.search),
@@ -64,9 +45,49 @@ class HomeScreen extends StatelessWidget {
                       ))
                   .toList(),
             ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: const FloatingActionButton(
+              onPressed: null,
+              child: Icon(Icons.mic),
+            ),
           ),
         );
       }),
+    );
+  }
+}
+
+class SearchBar extends StatelessWidget {
+  const SearchBar({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    void searchArticle(String serachInput) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Fetching Results for $serachInput')),
+      );
+      context.read<ArticleProvider>().queryArticles(serachInput);
+      context.read<ToogleSearch>().toogleSeachBar();
+    }
+
+    const inputDecoration = InputDecoration(
+      hintText: "Seach Anything ...",
+      fillColor: Colors.white,
+      filled: true,
+      border: OutlineInputBorder(
+        borderSide: BorderSide.none,
+      ),
+    );
+    return AnimatedContainer(
+      width: context.watch<ToogleSearch>().isSearchBarActive ? 200 : 0,
+      duration: const Duration(seconds: 1),
+      child: TextField(
+        onSubmitted: searchArticle,
+        decoration: inputDecoration,
+      ),
     );
   }
 }
