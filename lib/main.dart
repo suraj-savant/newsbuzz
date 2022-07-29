@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:newsbuzz/provider/article.dart';
 import 'package:newsbuzz/provider/toogle_search_bar.dart';
 import 'package:newsbuzz/screens/home.dart';
+import 'package:newsbuzz/screens/speech.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(

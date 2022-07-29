@@ -7,8 +7,22 @@ import 'package:provider/provider.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _speech = stt.SpeechToText();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +61,55 @@ class HomeScreen extends StatelessWidget {
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: const FloatingActionButton(
-              onPressed: null,
-              child: Icon(Icons.mic),
+            floatingActionButton: AvatarGlow(
+              animate: _isListening,
+              glowColor: Theme.of(context).primaryColor,
+              endRadius: 75.0,
+              duration: const Duration(milliseconds: 2000),
+              repeatPauseDuration: const Duration(milliseconds: 100),
+              repeat: true,
+              child: FloatingActionButton(
+                onPressed: _listen,
+                child: const Text("Start"),
+              ),
             ),
           ),
         );
       }),
     );
+  }
+
+  void _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) {
+          print(val);
+          // if (val == "done") {
+          //   Navigator.pop(context);
+          //   setState(() => _isListening = false);
+          //   _speech.stop();
+          // }
+        },
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        // showModalBottomSheet(
+        //     context: context,
+        //     builder: (context) {
+        //       return SizedBox(
+        //         height: 200,
+        //         child: IconButton(
+        //             onPressed: () => Navigator.pop(context),
+        //             icon: Icon(Icons.disabled_by_default)),
+        //       );
+        //     });
+        _speech.listen(onResult: (val) => print(val.recognizedWords));
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 }
 
