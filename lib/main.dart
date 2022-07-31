@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:newsbuzz/provider/article.dart';
+import 'package:newsbuzz/provider/speech_provider.dart';
 import 'package:newsbuzz/provider/toogle_search_bar.dart';
 import 'package:newsbuzz/screens/home.dart';
-import 'package:newsbuzz/screens/speech.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider<ToogleSearch>(create: (_) => ToogleSearch()),
+          ChangeNotifierProvider<ToogleSearch>(
+            create: (_) => ToogleSearch(),
+          ),
           ChangeNotifierProvider<ArticleProvider>(
-              create: (_) => ArticleProvider()),
+            create: (_) => ArticleProvider(),
+          ),
+          ChangeNotifierProvider<SpeechProvider>(
+            create: (_) => SpeechProvider(),
+          )
         ],
         child: const NewsApp(),
       ),

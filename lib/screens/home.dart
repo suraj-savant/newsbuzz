@@ -1,28 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:newsbuzz/models/article.dart';
 import 'package:newsbuzz/provider/article.dart';
+import 'package:newsbuzz/provider/speech_provider.dart';
 import 'package:newsbuzz/provider/toogle_search_bar.dart';
 import 'package:newsbuzz/utils/news_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  late stt.SpeechToText _speech;
-  bool _isListening = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _speech = stt.SpeechToText();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,56 +46,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   .toList(),
             ),
             floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: AvatarGlow(
-              animate: _isListening,
-              glowColor: Theme.of(context).primaryColor,
-              endRadius: 75.0,
-              duration: const Duration(milliseconds: 2000),
-              repeatPauseDuration: const Duration(milliseconds: 100),
-              repeat: true,
-              child: FloatingActionButton(
-                onPressed: _listen,
-                child: const Text("Start"),
-              ),
-            ),
+                FloatingActionButtonLocation.miniCenterDocked,
+            floatingActionButton: const SpeechButton(),
+            bottomSheet: SizedBox(
+                height: 20,
+                width: double.infinity,
+                child: Text(
+                  context.watch<SpeechProvider>().text,
+                  style: const TextStyle(fontSize: 20),
+                )),
           ),
         );
       }),
     );
   }
+}
 
-  void _listen() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (val) {
-          print(val);
-          // if (val == "done") {
-          //   Navigator.pop(context);
-          //   setState(() => _isListening = false);
-          //   _speech.stop();
-          // }
-        },
-        onError: (val) => print('onError: $val'),
-      );
-      if (available) {
-        setState(() => _isListening = true);
-        // showModalBottomSheet(
-        //     context: context,
-        //     builder: (context) {
-        //       return SizedBox(
-        //         height: 200,
-        //         child: IconButton(
-        //             onPressed: () => Navigator.pop(context),
-        //             icon: Icon(Icons.disabled_by_default)),
-        //       );
-        //     });
-        _speech.listen(onResult: (val) => print(val.recognizedWords));
-      }
-    } else {
-      setState(() => _isListening = false);
-      _speech.stop();
+class SpeechButton extends StatelessWidget {
+  const SpeechButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    void _sttHandler() {
+      context.read<SpeechProvider>().speechToText();
     }
+
+    return AvatarGlow(
+      animate: context.watch<SpeechProvider>().isListening,
+      glowColor: Theme.of(context).primaryColor,
+      endRadius: 75.0,
+      duration: const Duration(milliseconds: 2000),
+      repeatPauseDuration: const Duration(milliseconds: 100),
+      repeat: true,
+      child: FloatingActionButton(
+        onPressed: _sttHandler,
+        child: const Text("Start"),
+      ),
+    );
   }
 }
 

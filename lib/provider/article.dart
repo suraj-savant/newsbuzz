@@ -24,6 +24,7 @@ class ArticleProvider with ChangeNotifier {
   }
 
   Future<void> queryArticles(String query) async {
+    print("querying results for $query");
     List<Article> temp = await categoryArticleList[0];
     temp.insertAll(0, await fetchArticleByQuery(query));
     categoryArticleList[0] = Future.value(temp);
