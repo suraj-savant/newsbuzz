@@ -92,12 +92,11 @@ class _SpeechButtonState extends State<SpeechButton> {
               return SizedBox(
                 height: 200,
                 width: double.infinity,
-                child: Center(
-                  child: Column(
-                    children: [
-                      Text(state.text),
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(state.text),
+                  ],
                 ),
               );
             });

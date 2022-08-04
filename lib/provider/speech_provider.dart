@@ -13,7 +13,9 @@ class SpeechProvider with ChangeNotifier {
   }
 
   Future<String?> speechToText() async {
-    String? recognisedWords = "Default";
+    String? recognisedWords;
+    text = "Listening...";
+    notifyListeners();
     await _listen();
     recognisedWords = _speech.lastRecognizedWords;
     print("Returning form stt $recognisedWords");
