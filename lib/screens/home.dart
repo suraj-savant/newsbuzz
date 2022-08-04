@@ -48,13 +48,6 @@ class HomeScreen extends StatelessWidget {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniCenterDocked,
             floatingActionButton: const SpeechButton(),
-            bottomSheet: SizedBox(
-                height: 20,
-                width: double.infinity,
-                child: Text(
-                  context.watch<SpeechProvider>().text,
-                  style: const TextStyle(fontSize: 20),
-                )),
           ),
         );
       }),
@@ -62,15 +55,59 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class SpeechButton extends StatelessWidget {
+class SpeechButton extends StatefulWidget {
   const SpeechButton({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<SpeechButton> createState() => _SpeechButtonState();
+}
+
+class _SpeechButtonState extends State<SpeechButton> {
+  bool bottomSheetOpened = false;
+  void toogleSheet() {
+    setState(() {
+      bottomSheetOpened = !bottomSheetOpened;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    void _sttHandler() {
-      context.read<SpeechProvider>().speechToText();
+    void searchArticle(String? serachInput) {
+      if (serachInput != '') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Fetching Results for $serachInput')),
+        );
+        context.read<ArticleProvider>().queryArticles(serachInput!);
+      }
+    }
+
+    void _sttHandler() async {
+      if (!bottomSheetOpened) {
+        showBottomSheet(
+            context: context,
+            builder: (context) {
+              var state = context.watch<SpeechProvider>();
+              return SizedBox(
+                height: 200,
+                width: double.infinity,
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text(state.text),
+                    ],
+                  ),
+                ),
+              );
+            });
+        toogleSheet();
+      } else {
+        Navigator.pop(context);
+        toogleSheet();
+      }
+      String? textFromStt = await context.read<SpeechProvider>().speechToText();
+      searchArticle(textFromStt);
     }
 
     return AvatarGlow(

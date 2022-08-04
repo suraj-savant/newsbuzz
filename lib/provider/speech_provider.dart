@@ -5,31 +5,35 @@ class SpeechProvider with ChangeNotifier {
   final _speech = stt.SpeechToText();
   bool isListening = false;
   late String text = "Listening...";
+  bool isBottomSheetOpened = false;
 
-  void speechToText() async {
+  void switchBottomSheet() {
+    isBottomSheetOpened = !isBottomSheetOpened;
+    notifyListeners();
+  }
+
+  Future<String?> speechToText() async {
+    String? recognisedWords = "Default";
+    await _listen();
+    recognisedWords = _speech.lastRecognizedWords;
+    print("Returning form stt $recognisedWords");
+    return Future.value(recognisedWords);
+  }
+
+  Future<void> _listen() async {
     if (!isListening) {
       bool available = await _speech.initialize(
-        onStatus: (val) {
-          print('onStatus: $val');
-          if (text != "Listening..." && val == "done") {
-            print("Searching results for $text");
-            isListening = false;
-            notifyListeners();
-            _speech.stop();
-          }
-        },
-        onError: (val) => print('onError: $val'),
+        onStatus: (val) => print('onStatus : $val'),
+        onError: (val) => print('onError : $val'),
       );
       if (available) {
         isListening = true;
         notifyListeners();
-        _speech.listen(
-          onResult: (val) {
-            text = val.recognizedWords;
-            print(text);
-            notifyListeners();
-          },
-        );
+        _speech.listen(onResult: (val) {
+          print(val.recognizedWords);
+          text = val.recognizedWords;
+          notifyListeners();
+        });
       }
     } else {
       isListening = false;
