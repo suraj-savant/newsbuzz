@@ -118,7 +118,7 @@ class _SpeechButtonState extends State<SpeechButton> {
       repeat: true,
       child: FloatingActionButton(
         onPressed: _sttHandler,
-        child: const Text("Start"),
+        child: const Icon(Icons.mic),
       ),
     );
   }

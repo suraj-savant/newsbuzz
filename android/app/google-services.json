@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "143262547391",
+    "project_id": "newsbuzz-app",
+    "storage_bucket": "newsbuzz-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143262547391:android:20c372d074d4d0ddddb50a",
+        "android_client_info": {
+          "package_name": "com.example.newsbuzz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143262547391-00cm6aa15giecg091hpsj44346cb24la.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ21YFiQ2AZ2yhwNvog4GYnwYWxrFw_2w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "143262547391-00cm6aa15giecg091hpsj44346cb24la.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
