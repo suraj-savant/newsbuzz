@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:newsbuzz/models/article.dart';
 import 'package:newsbuzz/provider/article.dart';
+import 'package:newsbuzz/provider/login.dart';
 import 'package:newsbuzz/provider/speech_provider.dart';
 import 'package:newsbuzz/provider/toogle_search_bar.dart';
+import 'package:newsbuzz/screens/bookmarks.dart';
 import 'package:newsbuzz/utils/news_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:avatar_glow/avatar_glow.dart';
@@ -26,6 +28,17 @@ class HomeScreen extends StatelessWidget {
                   onPressed: context.read<ToogleSearch>().toogleSeachBar,
                   icon: const Icon(Icons.search),
                 ),
+                IconButton(
+                    onPressed:
+                        Provider.of<LoginProvider>(context, listen: false)
+                            .logOut,
+                    icon: const Icon(Icons.logout)),
+                IconButton(
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const BookmarkScreen())),
+                    icon: Icon(Icons.bookmark))
               ],
               bottom: TabBar(
                 padding: const EdgeInsets.all(16),

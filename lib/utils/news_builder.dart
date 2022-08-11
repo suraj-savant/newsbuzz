@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newsbuzz/models/article.dart';
+import 'package:newsbuzz/provider/bookmark.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ArticleBuilder extends StatelessWidget {
@@ -121,9 +123,16 @@ class _ArticleCardHeaderState extends State<ArticleCardHeader> {
                   size: 30,
                   color: Colors.black54,
                 )),
-            const IconButton(
-                onPressed: null,
-                icon: Icon(
+            IconButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Adding article to bookmark')),
+                  );
+
+                  Provider.of<BookmarkProvider>(context, listen: false)
+                      .addBookmark(article.toFirestore());
+                },
+                icon: const Icon(
                   Icons.bookmark,
                   size: 30,
                   color: Colors.black54,

@@ -12,7 +12,6 @@ Future<List<Article>> fetchArticleByCategory(String category) async {
   var url =
       'https://newsapi.org/v2/top-headlines?country=in&category=$category&apiKey=$apiKey';
   var res = await http.get(Uri.parse(url));
-  print(res.statusCode);
   if (!(res.statusCode == 200)) throw Exception("Unable to load json");
 
   return compute(parseArticle, res.body);
