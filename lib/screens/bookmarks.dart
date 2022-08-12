@@ -24,7 +24,7 @@ class BookmarkScreen extends StatelessWidget {
               articles: snapshot.data!,
             );
           }
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
