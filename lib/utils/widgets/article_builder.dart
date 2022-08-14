@@ -116,13 +116,6 @@ class _ArticleCardHeaderState extends State<ArticleCardHeader> {
                   size: 30,
                   color: Colors.black54,
                 )),
-            const IconButton(
-                onPressed: null,
-                icon: Icon(
-                  Icons.share,
-                  size: 30,
-                  color: Colors.black54,
-                )),
             IconButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(

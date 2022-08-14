@@ -5,7 +5,7 @@ import 'package:newsbuzz/provider/login.dart';
 import 'package:newsbuzz/provider/speech_provider.dart';
 import 'package:newsbuzz/provider/toogle_search_bar.dart';
 import 'package:newsbuzz/screens/bookmarks.dart';
-import 'package:newsbuzz/utils/news_builder.dart';
+import 'package:newsbuzz/utils/widgets/article_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 
@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isUserLoggedIn = context.watch<LoginProvider>().isloggedIn;
     return DefaultTabController(
       length: categories.length,
       child: Builder(builder: (context) {
@@ -28,17 +29,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: context.read<ToogleSearch>().toogleSeachBar,
                   icon: const Icon(Icons.search),
                 ),
-                IconButton(
-                    onPressed:
-                        Provider.of<LoginProvider>(context, listen: false)
-                            .logOut,
-                    icon: const Icon(Icons.logout)),
-                IconButton(
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const BookmarkScreen())),
-                    icon: Icon(Icons.bookmark))
+                const HomePopUpBtn(),
               ],
               bottom: TabBar(
                 padding: const EdgeInsets.all(16),
@@ -65,6 +56,50 @@ class HomeScreen extends StatelessWidget {
         );
       }),
     );
+  }
+}
+
+class HomePopUpBtn extends StatelessWidget {
+  const HomePopUpBtn({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+        onSelected: (value) => print(value),
+        itemBuilder: (context) => <PopupMenuEntry<MenuItem>>[
+              PopupMenuItem(
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Provider.of<LoginProvider>(context, listen: false)
+                          .logOut();
+                    },
+                    child: Row(
+                      children: const [
+                        Text("Logout"),
+                        Icon(Icons.logout),
+                      ],
+                    )),
+              ),
+              PopupMenuItem(
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const BookmarkScreen()));
+                    },
+                    child: Row(
+                      children: const [
+                        Text("bookmark"),
+                        Icon(Icons.bookmark),
+                      ],
+                    )),
+              ),
+            ]);
   }
 }
 
@@ -98,7 +133,8 @@ class _SpeechButtonState extends State<SpeechButton> {
 
     void _sttHandler() async {
       if (!bottomSheetOpened) {
-        showBottomSheet(
+        showModalBottomSheet(
+            isDismissible: false,
             context: context,
             builder: (context) {
               var state = context.watch<SpeechProvider>();
@@ -108,6 +144,18 @@ class _SpeechButtonState extends State<SpeechButton> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    AvatarGlow(
+                      animate: context.watch<SpeechProvider>().isListening,
+                      glowColor: Theme.of(context).primaryColor,
+                      endRadius: 75.0,
+                      duration: const Duration(milliseconds: 2000),
+                      repeatPauseDuration: const Duration(milliseconds: 100),
+                      repeat: true,
+                      child: IconButton(
+                        onPressed: _sttHandler,
+                        icon: const Icon(Icons.mic),
+                      ),
+                    ),
                     Text(state.text),
                   ],
                 ),
@@ -122,17 +170,9 @@ class _SpeechButtonState extends State<SpeechButton> {
       searchArticle(textFromStt);
     }
 
-    return AvatarGlow(
-      animate: context.watch<SpeechProvider>().isListening,
-      glowColor: Theme.of(context).primaryColor,
-      endRadius: 75.0,
-      duration: const Duration(milliseconds: 2000),
-      repeatPauseDuration: const Duration(milliseconds: 100),
-      repeat: true,
-      child: FloatingActionButton(
-        onPressed: _sttHandler,
-        child: const Icon(Icons.mic),
-      ),
+    return FloatingActionButton(
+      onPressed: _sttHandler,
+      child: const Icon(Icons.mic),
     );
   }
 }

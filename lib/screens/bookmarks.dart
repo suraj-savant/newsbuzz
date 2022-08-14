@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:newsbuzz/provider/bookmark.dart';
-import 'package:newsbuzz/utils/news_builder.dart';
+import 'package:newsbuzz/utils/widgets/article_builder.dart';
 import "package:provider/provider.dart";
 
 import '../models/article.dart';

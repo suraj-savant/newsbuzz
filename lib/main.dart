@@ -45,6 +45,7 @@ class NewsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isUserLoggedIn = context.watch<LoginProvider>().isloggedIn;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
