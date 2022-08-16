@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newsbuzz/firebase_options.dart';
 import 'package:newsbuzz/provider/article.dart';
+import 'package:newsbuzz/provider/article_card_header.dart';
 import 'package:newsbuzz/provider/bookmark.dart';
 import 'package:newsbuzz/provider/login.dart';
 import 'package:newsbuzz/provider/speech_provider.dart';
@@ -19,6 +20,9 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider<BookmarkProvider>(
           create: (_) => BookmarkProvider(),
+        ),
+        ChangeNotifierProvider<ArticleCardHeaderProvider>(
+          create: (_) => ArticleCardHeaderProvider(),
         ),
         ChangeNotifierProvider<LoginProvider>(
           create: (_) => LoginProvider(),

@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newsbuzz/provider/login.dart';
-import 'package:newsbuzz/screens/home.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -46,7 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
                   controller: emailController,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    value = value ?? "".trim();
+                    if (value.isEmpty) {
+                      return 'Please enter valid email';
+                    } else if (!value.contains("@") ||
+                        !value.contains(".com")) {
                       return 'Please enter valid email';
                     }
                     return null;
@@ -59,8 +60,14 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
                   controller: passwordController,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    value = value ?? "".trim();
+                    if (value.isEmpty) {
                       return 'Please enter the password';
+                    } else if (!(value.length >= 8)) {
+                      return "Password length mush be 8 digits";
+                    } else if (!value.contains(RegExp(
+                        r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"))) {
+                      return "Password must contains uppercase, lowercase letters.\nA number and aspecial character";
                     }
                     return null;
                   },
@@ -95,24 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-              InkWell(
-                onTap: () => Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) => const HomeScreen())),
-                child: Container(
-                  width: 300,
-                  padding: const EdgeInsets.all(16),
-                  decoration: const BoxDecoration(
-                    color: Colors.deepPurple,
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Continue as guest",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

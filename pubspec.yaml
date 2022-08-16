@@ -55,7 +55,7 @@ dev_dependencies:
 
 # flutter pub run flutter_native_splash:create
 flutter_native_splash:
-  color: "#42a5f5"
+  color: "#DCE4F5"
   image: assets/splash.png
 
 # flutter pub run flutter_launcher_icons:main

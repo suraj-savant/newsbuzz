@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsbuzz/models/article.dart';
+import 'package:newsbuzz/provider/article_card_header.dart';
 import 'package:newsbuzz/provider/bookmark.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -55,7 +56,7 @@ class ArticleCardWidget extends StatelessWidget {
   }
 }
 
-class ArticleCardHeader extends StatefulWidget {
+class ArticleCardHeader extends StatelessWidget {
   const ArticleCardHeader({
     Key? key,
     required this.article,
@@ -64,26 +65,16 @@ class ArticleCardHeader extends StatefulWidget {
   final Article article;
 
   @override
-  State<ArticleCardHeader> createState() => _ArticleCardHeaderState();
-}
-
-class _ArticleCardHeaderState extends State<ArticleCardHeader> {
-  int? maxTitleLines = 2;
-
-  void changeMaxTitleLines(bool isExpansionIconChanged) {
-    int? maxLines = isExpansionIconChanged ? null : 2;
-    setState(() {
-      maxTitleLines = maxLines;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final Article article = widget.article;
+    bool isHomeScreen = context.watch<ArticleCardHeaderProvider>().isHomeScreen;
+    bool isBookMarked = true;
+    print("Called");
+    IconData bookmarkIcon = isBookMarked ? Icons.bookmark : Icons.bookmark_add;
     return ExpansionTile(
       textColor: Colors.black,
-      onExpansionChanged: (isExpansionIconChanged) =>
-          changeMaxTitleLines(isExpansionIconChanged),
+      onExpansionChanged: (isExpansionIconChanged) => context
+          .read<ArticleCardHeaderProvider>()
+          .changeMaxTitleLines(isExpansionIconChanged),
       title: Column(
         children: [
           Text(
@@ -93,7 +84,7 @@ class _ArticleCardHeaderState extends State<ArticleCardHeader> {
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
-            maxLines: maxTitleLines,
+            maxLines: context.read<ArticleCardHeaderProvider>().maxTitleLines,
             textAlign: TextAlign.center,
           ),
         ],
@@ -118,15 +109,25 @@ class _ArticleCardHeaderState extends State<ArticleCardHeader> {
                 )),
             IconButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Adding article to bookmark')),
-                  );
+                  if (isHomeScreen) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Adding article to bookmark')),
+                    );
 
-                  Provider.of<BookmarkProvider>(context, listen: false)
-                      .addBookmark(article.toFirestore());
+                    Provider.of<BookmarkProvider>(context, listen: false)
+                        .addBookmark(article.toFirestore());
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Deleting bookmark')),
+                    );
+
+                    Provider.of<BookmarkProvider>(context, listen: false)
+                        .deleteBookmark(article.title!);
+                  }
                 },
-                icon: const Icon(
-                  Icons.bookmark,
+                icon: Icon(
+                  (isHomeScreen) ? bookmarkIcon : Icons.delete,
                   size: 30,
                   color: Colors.black54,
                 )),
