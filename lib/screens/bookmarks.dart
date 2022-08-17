@@ -43,6 +43,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                 .toList()
                 .cast();
             return ListView.builder(
+              key: UniqueKey(),
               itemCount: articles.length,
               itemBuilder: (context, index) =>
                   ArticleCardWidget(articles[index]),

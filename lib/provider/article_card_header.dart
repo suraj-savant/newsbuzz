@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ArticleCardHeaderProvider with ChangeNotifier {
   int? maxTitleLines = 2;
   bool isHomeScreen = true;
+
   void toogleHomeScreen() {
     isHomeScreen = !isHomeScreen;
     notifyListeners();

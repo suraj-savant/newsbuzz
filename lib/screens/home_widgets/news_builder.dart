@@ -12,23 +12,37 @@ class NewsBuilder extends StatelessWidget {
   final int? currentTabIndex;
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: RefreshIndicator(
+    return RefreshIndicator(
       onRefresh: () =>
           context.read<ArticleProvider>().refreshArticleList(currentTabIndex),
       child: FutureBuilder<List<Article>>(
         future: articleList,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Text("Opps Please check your Internet connection");
+            return RefreshIndicator(
+              onRefresh: () => context
+                  .read<ArticleProvider>()
+                  .refreshArticleList(currentTabIndex),
+              child: ListView(
+                children: const [
+                  SizedBox(
+                    height: 300,
+                  ),
+                  Center(
+                    child:
+                        Text("No Internet connection refresh page to reload"),
+                  ),
+                ],
+              ),
+            );
           } else if (snapshot.hasData) {
             return ArticleBuilder(
               articles: snapshot.data!,
             );
           }
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         },
       ),
-    ));
+    );
   }
 }

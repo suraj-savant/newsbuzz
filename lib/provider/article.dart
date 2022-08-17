@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart ';
 import 'package:newsbuzz/models/article.dart';
@@ -13,11 +15,17 @@ const List<String> categories = [
 ];
 
 class ArticleProvider with ChangeNotifier {
-  List<Future<List<Article>>> categoryArticleList =
-      categories.map((category) => fetchArticleByCategory(category)).toList();
+  final db = FirebaseFirestore.instance;
+  late List<Future<List<Article>>> categoryArticleList;
+  ArticleProvider() {
+    categoryArticleList =
+        categories.map((category) => fetchArticleByCategory(category)).toList();
+    notifyListeners();
+  }
 
   Future<void> refreshArticleList(int? tabIndex) async {
-    List<Article> temp = await categoryArticleList[tabIndex!];
+    List<Article> temp =
+        await await fetchArticleByCategory(categories[tabIndex!]);
     temp.shuffle();
     categoryArticleList[tabIndex] = Future.value(temp);
     notifyListeners();
