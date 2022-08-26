@@ -26,7 +26,9 @@ class _SpeechButtonState extends State<SpeechButton> {
     void searchArticle(String? serachInput) {
       if (serachInput != '') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Fetching Results for $serachInput')),
+          const SnackBar(
+            content: Text('Please check the results in general tab'),
+          ),
         );
         context.read<ArticleProvider>().queryArticles(serachInput!);
       }

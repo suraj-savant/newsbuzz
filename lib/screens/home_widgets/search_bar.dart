@@ -12,7 +12,8 @@ class SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     void searchArticle(String serachInput) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Fetching Results for $serachInput')),
+        const SnackBar(
+            content: Text('The results are available on general tab')),
       );
       context.read<ArticleProvider>().queryArticles(serachInput);
       context.read<ToogleSearch>().toogleSeachBar();
@@ -28,7 +29,7 @@ class SearchBar extends StatelessWidget {
     );
     return AnimatedContainer(
       width: context.watch<ToogleSearch>().isSearchBarActive ? 200 : 0,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 0),
       child: TextField(
         onSubmitted: searchArticle,
         decoration: inputDecoration,

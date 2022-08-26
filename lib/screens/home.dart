@@ -18,38 +18,48 @@ class HomeScreen extends StatelessWidget {
         final int? currentTabIndex = DefaultTabController.of(context)?.index;
 
         return SafeArea(
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text("NewsBuzz"),
-              actions: [
-                const SearchBar(),
-                IconButton(
-                  onPressed: context.read<ToogleSearch>().toogleSeachBar,
-                  icon: const Icon(Icons.search),
+          child: GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              Provider.of<ToogleSearch>(context, listen: false)
+                  .toogleSeachBar();
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text("NewsBuzz"),
+                actions: [
+                  const SearchBar(),
+                  IconButton(
+                    onPressed: context.read<ToogleSearch>().toogleSeachBar,
+                    icon: const Icon(Icons.search),
+                  ),
+                  const HomePopUpBtn(),
+                ],
+                bottom: TabBar(
+                  padding: const EdgeInsets.all(16),
+                  isScrollable: true,
+                  tabs: categories
+                      .map((category) => Text(category.toUpperCase()))
+                      .toList(),
                 ),
-                const HomePopUpBtn(),
-              ],
-              bottom: TabBar(
-                padding: const EdgeInsets.all(16),
-                isScrollable: true,
-                tabs: categories
-                    .map((category) => Text(category.toUpperCase()))
+              ),
+              body: TabBarView(
+                children: context
+                    .watch<ArticleProvider>()
+                    .categoryArticleList
+                    .map((articlelist) => NewsBuilder(
+                          articleList: articlelist,
+                          currentTabIndex: currentTabIndex,
+                        ))
                     .toList(),
               ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.miniCenterDocked,
+              floatingActionButton: const SpeechButton(),
             ),
-            body: TabBarView(
-              children: context
-                  .watch<ArticleProvider>()
-                  .categoryArticleList
-                  .map((articlelist) => NewsBuilder(
-                        articleList: articlelist,
-                        currentTabIndex: currentTabIndex,
-                      ))
-                  .toList(),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.miniCenterDocked,
-            floatingActionButton: const SpeechButton(),
           ),
         );
       }),

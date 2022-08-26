@@ -18,7 +18,6 @@ class SpeechProvider with ChangeNotifier {
     notifyListeners();
     await _listen();
     recognisedWords = _speech.lastRecognizedWords;
-    print("Returning form stt $recognisedWords");
     return Future.value(recognisedWords);
   }
 
@@ -32,7 +31,6 @@ class SpeechProvider with ChangeNotifier {
         isListening = true;
         notifyListeners();
         _speech.listen(onResult: (val) {
-          print(val.recognizedWords);
           text = val.recognizedWords;
           notifyListeners();
         });

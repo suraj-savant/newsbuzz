@@ -5,12 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:newsbuzz/models/article.dart';
 import 'package:newsbuzz/utils/api_key.dart';
 
-///Fetches the list of artible by given category
-///
-///
 Future<List<Article>> fetchArticleByCategory(String category) async {
   var url =
-      'https://newsapi.org/v2/top-headlines?country=in&category=$category&apiKey=$apiKey';
+      'https://newsapi.org/v2/top-headlines?country=in&category=$category&language=en&apiKey=$apiKey';
   var res = await http.get(Uri.parse(url));
   if (!(res.statusCode == 200)) throw Exception("Unable to load json");
 
@@ -20,14 +17,10 @@ Future<List<Article>> fetchArticleByCategory(String category) async {
 Future<List<Article>> fetchArticleByQuery(String query) async {
   var url = 'https://newsapi.org/v2/everything?q=$query&apiKey=$apiKey';
   var res = await http.get(Uri.parse(url));
-  print(res.statusCode);
   if (!(res.statusCode == 200)) throw Exception("Unable to load json");
 
   return compute(parseArticle, res.body);
 }
-
-/// A functiion that converts the response body from http get method into the
-/// `List<Articles>`
 
 List<Article> parseArticle(String responseBody) {
   final jsonData = jsonDecode(responseBody);
