@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:newsbuzz/models/article.dart';
-import 'package:newsbuzz/provider/article.dart';
 import 'package:newsbuzz/provider/article_card_header.dart';
 import 'package:newsbuzz/provider/bookmark.dart';
 import 'package:provider/provider.dart';
@@ -12,13 +11,18 @@ class ArticleBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      key: UniqueKey(),
-      itemCount: articles.length,
-      itemBuilder: ((context, index) {
-        Article article = articles[index];
-        return ArticleCardWidget(article);
-      }),
+    return Center(
+      child: SizedBox(
+        width: 600,
+        child: ListView.builder(
+          key: UniqueKey(),
+          itemCount: articles.length,
+          itemBuilder: ((context, index) {
+            Article article = articles[index];
+            return ArticleCardWidget(article);
+          }),
+        ),
+      ),
     );
   }
 }
@@ -68,8 +72,7 @@ class ArticleCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isHomeScreen = context.watch<ArticleCardHeaderProvider>().isHomeScreen;
-    bool isBookmarked = false;
-    IconData bookmarkIcon = isBookmarked ? Icons.bookmark : Icons.bookmark_add;
+    IconData bookmarkIcon = Icons.bookmark;
 
     return ExpansionTile(
       textColor: Colors.black,
@@ -109,26 +112,24 @@ class ArticleCardHeader extends StatelessWidget {
                   color: Colors.black54,
                 )),
             IconButton(
-                onPressed: (isBookmarked)
-                    ? null
-                    : () {
-                        if (isHomeScreen) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Adding article to bookmark')),
-                          );
+                onPressed: () {
+                  if (isHomeScreen) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Adding article to bookmark')),
+                    );
 
-                          Provider.of<BookmarkProvider>(context, listen: false)
-                              .addBookmark(article.toFirestore());
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Deleting bookmark')),
-                          );
+                    Provider.of<BookmarkProvider>(context, listen: false)
+                        .addBookmark(article.toFirestore());
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Deleting bookmark')),
+                    );
 
-                          Provider.of<BookmarkProvider>(context, listen: false)
-                              .deleteBookmark(article.title!);
-                        }
-                      },
+                    Provider.of<BookmarkProvider>(context, listen: false)
+                        .deleteBookmark(article.title!);
+                  }
+                },
                 icon: Icon(
                   (isHomeScreen) ? bookmarkIcon : Icons.delete,
                   size: 30,

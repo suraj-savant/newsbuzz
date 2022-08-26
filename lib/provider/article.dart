@@ -24,8 +24,7 @@ class ArticleProvider with ChangeNotifier {
   }
 
   Future<void> refreshArticleList(int? tabIndex) async {
-    List<Article> temp =
-        await await fetchArticleByCategory(categories[tabIndex!]);
+    List<Article> temp = await fetchArticleByCategory(categories[tabIndex!]);
     temp.shuffle();
     categoryArticleList[tabIndex] = Future.value(temp);
     notifyListeners();
