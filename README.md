@@ -1,8 +1,9 @@
-![alt text] 
-
-# newsbuzz
+# Newsbuzz
 
  A news segregation app
+ 
+ <img src = "https://github.com/Suraj20701/newsbuzz/blob/master/assets/screenshot.jpg?raw=true">
+
 
 ## Getting Started
 
