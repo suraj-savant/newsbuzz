@@ -1,6 +1,6 @@
 # Newsbuzz
 
- A news segregation app
+ A news segregation app. <a href="https://drive.google.com/file/d/1kXoDAe7Nkruj5HyvGAuFF2PGa-KT1IUc/view?usp=drive_link"> Click Here to download </a>
  
  <img src = "https://github.com/Suraj20701/newsbuzz/blob/master/assets/screenshot.jpg?raw=true">
 
